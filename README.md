@@ -8,6 +8,8 @@ Typically, processes that need to gather data about nearby Wi-Fi networks would 
 
 With **nlutils-lp**, no more scrapping is needed.
 
+This is based on [**scandump**](https://github.com/intuitibits/scandump) by Adrian Granados from Intuitibits.
+
 ## Features
 
 ## nlscan-lp
