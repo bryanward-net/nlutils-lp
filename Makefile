@@ -2,9 +2,9 @@ CC = gcc
 CFLAGS = -Wall -Werror -std=c99 -I/usr/include/libnl3/
 LDFLAGS = -lnl-3 -lnl-genl-3 -lpcap
 
-TARGET = scandump
+TARGET = nlscan-lp
 
-SRCS = scandump.c
+SRCS = nlscan-lp.c
 
 OBJS = $(SRCS:.c=.o)
 

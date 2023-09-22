@@ -19,7 +19,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-#define VERSION "1.0.4"
+#define VERSION "1.0.5"
 
 #define NL80211_GENL_FAMILY_NAME "nl80211"
 #define NL80211_GENL_GROUP_NAME "scan"
@@ -87,7 +87,6 @@ static int callback_dump(struct nl_msg *msg, void *arg) {
 
   // Called by the kernel for each network found.
   struct genlmsghdr *gnlh = nlmsg_data(nlmsg_hdr(msg));
-  pcap_dumper_t *dumper = arg;
   static struct pcap_pkthdr header;
   static u_char packet[MAX_PACKET_SIZE];
   struct nlattr *tb[NL80211_ATTR_MAX + 1];
@@ -123,10 +122,12 @@ static int callback_dump(struct nl_msg *msg, void *arg) {
   // Prepare packet with radiotap and beacon headers.
   memcpy(packet, packet_header, PACKET_HEADER_LEN);
 
+
   // Channel frequency
   uint16_t freq = nla_get_u32(bss[NL80211_BSS_FREQUENCY]);
   packet[8] = freq & 0xFF;
   packet[9] = (freq >> 8) & 0xFF;
+
 
   // Channel flags
   uint16_t channel_flags = 0x0000;
@@ -143,10 +144,12 @@ static int callback_dump(struct nl_msg *msg, void *arg) {
   int rssi = (int)nla_get_u32(bss[NL80211_BSS_SIGNAL_MBM]) / 100;
   packet[12] = rssi & 0xFF;
 
+
   // Transmitter address and BSSID
   u_char *bssid = nla_data(bss[NL80211_BSS_BSSID]);
   memcpy(&packet[23], bssid, nla_len(bss[NL80211_BSS_BSSID]));
   memcpy(&packet[29], bssid, nla_len(bss[NL80211_BSS_BSSID]));
+
 
   // Beacon TSF
   uint64_t beacon_tsf = nla_get_u64(bss[NL80211_BSS_TSF]);
@@ -170,13 +173,43 @@ static int callback_dump(struct nl_msg *msg, void *arg) {
   int payload_len = min(ie_data_len, MAX_PACKET_SIZE - PACKET_HEADER_LEN);
   memcpy(packet + PACKET_HEADER_LEN, ie_data, payload_len);
 
+  uint8_t ssid_len = (uint8_t)*(ie_data + 1);
+  u_char ssid[ssid_len + 1];	//Length of SSID as reported plus \0
+  //printf("%i\n", ssid_len);
+  //printf("%c\n", *(ie_data + 2));
+  memcpy(ssid, (ie_data + 2), ssid_len);
+  ssid[ssid_len] = '\0';
+  //printf("%s\n", ssid);
+
+  //Escape spaces for Influx
+  int j = 0;
+  u_char new_ssid[2 * ssid_len + 1];
+  for (int i=0; i<=ssid_len; i++) {
+    if (ssid[i] == 32) {
+      new_ssid[j] = '\\';
+      new_ssid[j+1] = ' ';
+      j+=2;
+    } else {
+      new_ssid[j] = ssid[i];
+      j++;
+    }
+  }
+  new_ssid[j] = '\0';
+  //printf("%s\n", ssid);
+  //printf("%s\n", new_ssid);
+
+
+
   // Update pcap header with final length values.
   header.caplen = PACKET_HEADER_LEN + payload_len;
   header.len = PACKET_HEADER_LEN + ie_data_len;
   gettimeofday(&(header.ts), NULL);
 
   // Write packet out.
-  pcap_dump((u_char *)dumper, &header, (u_char *)packet);
+  //pcap_dump((u_char *)dumper, &header, (u_char *)packet);
+
+  //Line Protocol
+  printf("nlscan,bssid=%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx,ssid=%s rssi=%i,freq=%i\n", *bssid, *(bssid+1), *(bssid+2), *(bssid+3), *(bssid+4), *(bssid+5), new_ssid, rssi, freq);
 
   return NL_SKIP;
 }
@@ -253,7 +286,6 @@ int main(int argc, char *argv[]) {
   struct nl_sock *socket;
   int err;
   pcap_t *handle;
-  pcap_dumper_t *dumper = NULL;
   int linktype = DLT_IEEE802_11_RADIO;
   int snaplen = 65535;
 
@@ -264,14 +296,13 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  if (argc != 3) {
-    printf("Usage: %s <interface> <filename>\n", basename(argv[0]));
+  if (argc != 2) {
+    printf("Usage: %s <interface>\n", basename(argv[0]));
     printf("       %s --version\n", basename(argv[0]));
     return EXIT_FAILURE;
   }
 
   int if_index = if_nametoindex(argv[1]);
-  char *file = argv[2];
 
   socket = nl_socket_alloc();
   if (!socket) {
@@ -318,28 +349,11 @@ int main(int argc, char *argv[]) {
       return err;
     }
 
-    // Open pcap file if needed if first scan is successful.
-    if (dumper == NULL) {
-      if (strcmp(file, "-") == 0) {
-        dumper = pcap_dump_fopen(handle, stdout);
-      } else {
-        dumper = pcap_dump_open(handle, file);
-      }
-
-      if (!dumper) {
-        fprintf(stderr, "command failed: %s\n", pcap_geterr(handle));
-        pcap_close(handle);
-        nl_socket_free(socket);
-        return -1;
-      }
-    }
-
     // Dump networks found into file.
     struct nl_msg *msg = nlmsg_alloc();
     genlmsg_put(msg, 0, 0, genl_id, 0, NLM_F_DUMP, NL80211_CMD_GET_SCAN, 0);
     nla_put_u32(msg, NL80211_ATTR_IFINDEX, if_index);
-    nl_socket_modify_cb(socket, NL_CB_VALID, NL_CB_CUSTOM, callback_dump,
-                        dumper);
+    nl_socket_modify_cb(socket, NL_CB_VALID, NL_CB_CUSTOM, callback_dump, 0);
     int ret = nl_send_auto(socket, msg);
     ret = nl_recvmsgs_default(socket);
     nlmsg_free(msg);
@@ -348,11 +362,7 @@ int main(int argc, char *argv[]) {
       fprintf(stderr, "warning: %s (%d)\n", nl_geterror(-ret), ret);
     }
 
-    pcap_dump_flush(dumper);
   }
-
-  pcap_dump_close(dumper);
-  pcap_close(handle);
 
   return 0;
 }

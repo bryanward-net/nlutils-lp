@@ -54,3 +54,5 @@ debhelper-build-stamp
 *.substvars
 debian/files
 debian/scandump
+
+nlscan-lp

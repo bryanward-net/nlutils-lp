@@ -1,5 +1,3 @@
-# ==THIS IS UNDER ACTIVE DEVELOPMENT==
-
 # nlutils-lp
 
 A command-line utility that scans for Wi-Fi networks using the 802.11 netlink API and outputs the scan results in Influx Line Protocol format.
