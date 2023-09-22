@@ -1,4 +1,7 @@
 /*
+** nlscan-lp
+** Built by Bryan Ward 2023
+** Based on scandump by Adrian Granados.
 ** Copyright (c) 2023 Intuitibits LLC
 ** Author: Adrian Granados <adrian@intuitibits.com>
 */
@@ -290,15 +293,16 @@ int main(int argc, char *argv[]) {
   int snaplen = 65535;
 
   if (argc == 2) {
-    if (strcmp(argv[1], "--version") == 0) {
-      printf("%s version %s\n", basename(argv[0]), VERSION);
+    if (strcmp(argv[1], "-v") == 0) {
+      printf("%s version %s\nBuilt by Bryan Ward, based on scandump by Adrian Granados\n", basename(argv[0]), VERSION);
       return EXIT_SUCCESS;
     }
   }
 
   if (argc != 2) {
     printf("Usage: %s <interface>\n", basename(argv[0]));
-    printf("       %s --version\n", basename(argv[0]));
+    printf("       %s -v\n", basename(argv[0]));
+    printf("Built by Bryan Ward, based on scandump by Adrian Granados\n");
     return EXIT_FAILURE;
   }
 
