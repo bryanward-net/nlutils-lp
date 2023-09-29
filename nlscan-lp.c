@@ -33,6 +33,317 @@
 #define min(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
+
+int chlookup (int f) {
+  switch (f) {
+    //Band 2.4
+    case (2412):
+      return 1;
+      break;
+    case (2417):
+      return 2;
+      break;
+    case (2422):
+      return 3;
+      break;
+    case (2427):
+      return 4;
+      break;
+    case (2432):
+      return 5;
+      break;
+    case (2437):
+      return 6;
+      break;
+    case (2442):
+      return 7;
+      break;
+    case (2447):
+      return 8;
+      break;
+    case (2452):
+      return 9;
+      break;
+    case (2457):
+      return 10;
+      break;
+    case (2462):
+      return 11;
+      break;
+    case (2467):
+      return 12;
+      break;
+    case (2472):
+      return 13;
+      break;
+    case (2484):
+      return 14;
+      break;
+
+    //Band 5
+    case (5180):
+      return 36;
+      break;
+    case (5200):
+      return 40;
+      break;
+    case (5220):
+      return 44;
+      break;
+    case (5240):
+      return 48;
+      break;
+    case (5260):
+      return 52;
+      break;
+    case (5280):
+      return 56;
+      break;
+    case (5300):
+      return 60;
+      break;
+    case (5320):
+      return 64;
+      break;
+    case (5500):
+      return 100;
+      break;
+    case (5520):
+      return 104;
+      break;
+    case (5540):
+      return 108;
+      break;
+    case (5560):
+      return 112;
+      break;
+    case (5580):
+      return 116;
+      break;
+    case (5600):
+      return 120;
+      break;
+    case (5620):
+      return 124;
+      break;
+    case (5640):
+      return 128;
+      break;
+    case (5660):
+      return 132;
+      break;
+    case (5680):
+      return 136;
+      break;
+    case (5700):
+      return 140;
+      break;
+    case (5720):
+      return 144;
+      break;
+    case (5745):
+      return 149;
+      break;
+    case (5765):
+      return 153;
+      break;
+    case (5785):
+      return 157;
+      break;
+    case (5805):
+      return 161;
+      break;
+    case (5825):
+      return 165;
+      break;
+
+    //Band 6
+    case (5955):
+      return 1;
+      break;
+    case (5975):
+      return 5;
+      break;
+    case (5995):
+      return 9;
+      break;
+    case (6015):
+      return 13;
+      break;
+    case (6035):
+      return 17;
+      break;
+    case (6055):
+      return 21;
+      break;
+    case (6075):
+      return 25;
+      break;
+    case (6095):
+      return 29;
+      break;
+    case (6115):
+      return 33;
+      break;
+    case (6135):
+      return 37;
+      break;
+    case (6155):
+      return 41;
+      break;
+    case (6175):
+      return 45;
+      break;
+    case (6195):
+      return 49;
+      break;
+    case (6215):
+      return 53;
+      break;
+    case (6235):
+      return 57;
+      break;
+    case (6255):
+      return 61;
+      break;
+    case (6275):
+      return 65;
+      break;
+    case (6295):
+      return 69;
+      break;
+    case (6315):
+      return 73;
+      break;
+    case (6335):
+      return 77;
+      break;
+    case (6355):
+      return 81;
+      break;
+    case (6375):
+      return 85;
+      break;
+    case (6395):
+      return 89;
+      break;
+    case (6415):
+      return 93;
+      break;
+    case (6435):
+      return 97;
+      break;
+    case (6455):
+      return 101;
+      break;
+    case (6475):
+      return 105;
+      break;
+    case (6495):
+      return 109;
+      break;
+    case (6515):
+      return 113;
+      break;
+    case (6535):
+      return 117;
+      break;
+    case (6555):
+      return 121;
+      break;
+    case (6575):
+      return 125;
+      break;
+    case (6595):
+      return 129;
+      break;
+    case (6615):
+      return 133;
+      break;
+    case (6635):
+      return 137;
+      break;
+    case (6655):
+      return 141;
+      break;
+    case (6675):
+      return 145;
+      break;
+    case (6695):
+      return 149;
+      break;
+    case (6715):
+      return 153;
+      break;
+    case (6735):
+      return 157;
+      break;
+    case (6755):
+      return 161;
+      break;
+    case (6775):
+      return 165;
+      break;
+    case (6795):
+      return 169;
+      break;
+    case (6815):
+      return 173;
+      break;
+    case (6835):
+      return 177;
+      break;
+    case (6855):
+      return 181;
+      break;
+    case (6875):
+      return 185;
+      break;
+    case (6895):
+      return 189;
+      break;
+    case (6915):
+      return 193;
+      break;
+    case (6935):
+      return 197;
+      break;
+    case (6955):
+      return 201;
+      break;
+    case (6975):
+      return 205;
+      break;
+    case (6995):
+      return 209;
+      break;
+    case (7015):
+      return 213;
+      break;
+    case (7035):
+      return 217;
+      break;
+    case (7055):
+      return 221;
+      break;
+    case (7075):
+      return 225;
+      break;
+    case (7095):
+      return 229;
+      break;
+    case (7115):
+      return 233;
+      break;
+
+    default:
+      return 0;
+      break;
+  }
+}
+
+
+
 struct trigger_results {
   int done;
   int aborted;
@@ -212,7 +523,10 @@ static int callback_dump(struct nl_msg *msg, void *arg) {
   //pcap_dump((u_char *)dumper, &header, (u_char *)packet);
 
   //Line Protocol
-  printf("nlscan,bssid=%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx,ssid=%s rssi=%i,freq=%i\n", *bssid, *(bssid+1), *(bssid+2), *(bssid+3), *(bssid+4), *(bssid+5), new_ssid, rssi, freq);
+  int chan = chlookup(freq);
+  struct timeval ts;
+  gettimeofday(&ts, NULL);
+  printf("nlscan,bssid=%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx,ssid=%s rssi=%i,freq=%u,chan=%u %lu\n", *bssid, *(bssid+1), *(bssid+2), *(bssid+3), *(bssid+4), *(bssid+5), new_ssid, rssi, freq, chan, ts.tv_sec);
 
   return NL_SKIP;
 }
