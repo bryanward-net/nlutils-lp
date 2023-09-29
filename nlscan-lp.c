@@ -526,7 +526,16 @@ static int callback_dump(struct nl_msg *msg, void *arg) {
   int chan = chlookup(freq);
   struct timeval ts;
   gettimeofday(&ts, NULL);
-  printf("nlscan,bssid=%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx,ssid=%s rssi=%i,freq=%u,chan=%u %lu\n", *bssid, *(bssid+1), *(bssid+2), *(bssid+3), *(bssid+4), *(bssid+5), new_ssid, rssi, freq, chan, ts.tv_sec);
+
+
+  char name[271];
+  if (strcmp((char *)ssid,"") == 0) {
+    sprintf(name, "[%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx]", *bssid, *(bssid+1), *(bssid+2), *(bssid+3), *(bssid+4), *(bssid+5));
+    printf("nlscan,bssid=%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx,channel=%u,freq=%u,name=%s rssi=%i %lu\n", *bssid, *(bssid+1), *(bssid+2), *(bssid+3), *(bssid+4), *(bssid+5), chan, freq, name, rssi, ts.tv_sec * 1000000000 );
+  } else {
+    sprintf(name, "%s\\ [%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx]", new_ssid, *bssid, *(bssid+1), *(bssid+2), *(bssid+3), *(bssid+4), *(bssid+5));
+    printf("nlscan,bssid=%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx,ssid=%s,channel=%u,freq=%u,name=%s rssi=%i %lu\n", *bssid, *(bssid+1), *(bssid+2), *(bssid+3), *(bssid+4), *(bssid+5), new_ssid, chan, freq, name, rssi, ts.tv_sec * 1000000000 );
+  }
 
   return NL_SKIP;
 }
