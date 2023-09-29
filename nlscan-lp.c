@@ -613,10 +613,10 @@ int main(int argc, char *argv[]) {
     }
   }
 
-  if (argc != 2) {
+  if (argc != 2 || strcmp(argv[1], "-h") == 0) {
     printf("Usage: %s <interface>\n", basename(argv[0]));
     printf("       %s -v\n", basename(argv[0]));
-    printf("Built by Bryan Ward, based on scandump by Adrian Granados\n");
+    printf("%s version %s\nBuilt by Bryan Ward, based on scandump by Adrian Granados\n", basename(argv[0]), VERSION);	
     return EXIT_FAILURE;
   }
 
