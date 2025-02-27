@@ -4,7 +4,7 @@ A command-line utility that scans for Wi-Fi networks using the 802.11 netlink AP
 
 Typically, processes that need to gather data about nearby Wi-Fi networks would do a scan using [iw](https://wireless.wiki.kernel.org/en/users/documentation/iw) and scrape its text output. However, it is generally a bad idea to try parsing another program's output if it is not designed to be consumed by other processes. The text may change with newer updates or simply by running the program on a different system. 
 
-With **nlutils-lp**, no more scrapping is needed.
+With **nlutils-lp**, no more scraping is needed.
 
 This is based on [**scandump**](https://github.com/intuitibits/scandump) by Adrian Granados from Intuitibits.
 
