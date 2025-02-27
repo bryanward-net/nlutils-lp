@@ -1,6 +1,6 @@
 /*
 ** nlscan-lp
-** Built by Bryan Ward 2023
+** Built by Bryan Ward 2025
 ** Based on scandump by Adrian Granados.
 ** Copyright (c) 2023 Intuitibits LLC
 ** Author: Adrian Granados <adrian@intuitibits.com>
@@ -22,7 +22,7 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-#define VERSION "1.1.0"
+#define VERSION "1.2.0"
 
 #define NL80211_GENL_FAMILY_NAME "nl80211"
 #define NL80211_GENL_GROUP_NAME "scan"
@@ -33,6 +33,7 @@
 #define min(a, b) ((a) < (b) ? (a) : (b))
 #endif
 
+char if_name[IF_NAMESIZE];
 
 int chlookup (int f) {
   switch (f) {
@@ -531,10 +532,10 @@ static int callback_dump(struct nl_msg *msg, void *arg) {
   char name[271];
   if (strcmp((char *)ssid,"") == 0) {
     sprintf(name, "[%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx]", *bssid, *(bssid+1), *(bssid+2), *(bssid+3), *(bssid+4), *(bssid+5));
-    printf("nlscan,bssid=%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx,channel=%u,freq=%u,name=%s rssi=%i %lu\n", *bssid, *(bssid+1), *(bssid+2), *(bssid+3), *(bssid+4), *(bssid+5), chan, freq, name, rssi, ts.tv_sec * 1000000000 );
+    printf("nlscan,ifname=%s,bssid=%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx,freq=%u,channel=%u,name=%s rssi=%i %lu\n", if_name, *bssid, *(bssid+1), *(bssid+2), *(bssid+3), *(bssid+4), *(bssid+5), freq, chan, name, rssi, ts.tv_sec * 1000000000 );
   } else {
     sprintf(name, "%s\\ [%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx]", new_ssid, *bssid, *(bssid+1), *(bssid+2), *(bssid+3), *(bssid+4), *(bssid+5));
-    printf("nlscan,bssid=%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx,ssid=%s,channel=%u,freq=%u,name=%s rssi=%i %lu\n", *bssid, *(bssid+1), *(bssid+2), *(bssid+3), *(bssid+4), *(bssid+5), new_ssid, chan, freq, name, rssi, ts.tv_sec * 1000000000 );
+    printf("nlscan,ifname=%s,bssid=%02hhx%02hhx%02hhx%02hhx%02hhx%02hhx,freq=%u,channel=%u,name=%s,ssid=%s rssi=%i %lu\n", if_name, *bssid, *(bssid+1), *(bssid+2), *(bssid+3), *(bssid+4), *(bssid+5), freq, chan, name, new_ssid, rssi, ts.tv_sec * 1000000000 );
   }
 
   return NL_SKIP;
@@ -630,6 +631,9 @@ int main(int argc, char *argv[]) {
   }
 
   int if_index = if_nametoindex(argv[1]);
+  //Convert if_index to the proper ifname the system uses
+  if_indextoname(if_index, if_name);
+  //fprintf(stderr, "IF_NAME: %s", if_name);
 
   socket = nl_socket_alloc();
   if (!socket) {
