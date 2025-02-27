@@ -38,7 +38,7 @@ sudo make install
 
 ```shell
 Usage: nlscan-lp <interface>
-       nlscan-lp --version
+       nlscan-lp -v	Display version and exit
 ```
 
 Where `<interface>` is the name of the WLAN interface (e.g. `wlan0`).  Standard output is used to output the Line Protocol data.
